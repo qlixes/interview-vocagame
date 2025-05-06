@@ -2,6 +2,7 @@ package manager
 
 import (
 	"context"
+	"database/sql"
 	"log"
 
 	"github.com/go-redis/redis/v8"
@@ -13,7 +14,7 @@ type Manager interface {
 }
 
 type manager struct {
-	cache *redis.Client
+	db *sql.DB
 }
 
 var Mgr = newManager()

@@ -6,8 +6,9 @@ import (
 	"os"
 	"regexp"
 	"strconv"
+	"sync"
 
-	"github.com/qlixes/vocagame/manager"
+	"github.com/qlixes/vocagame/provider"
 	"github.com/spf13/cobra"
 )
 
@@ -38,6 +39,9 @@ var statusCmd = &cobra.Command{
 	Run: statusHandle,
 }
 
+var wg sync.WaitGroup
+var mu sync.Mutex
+
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
@@ -45,10 +49,15 @@ func Execute() {
 }
 
 func init() {
+	initConfig()
 	rootCmd.AddCommand(poolCmd)
 	rootCmd.AddCommand(parkingCmd)
 	rootCmd.AddCommand(leavingCmd)
 	rootCmd.AddCommand(statusCmd)
+}
+
+func initConfig() {
+	fmt.Println(provider.Cfg)
 }
 
 func poolHandle(cmd *cobra.Command, args []string) {
@@ -70,11 +79,6 @@ func poolHandle(cmd *cobra.Command, args []string) {
 		log.Fatalf("Failed parseint : %v \n", err.Error())
 	}
 
-	for i := 1; i <= limit; i++ {
-		key := fmt.Sprintf("pool_%d", i)
-		manager.Mgr.Update(key, "")
-		fmt.Printf("Allocated slot number: %d \n", i)
-	}
 }
 
 func parkingHandle(cmd *cobra.Command, args []string) {
