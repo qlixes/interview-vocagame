@@ -1,14 +1,14 @@
 package entity
 
 type Park struct {
-	ID          uint64
-	Name        string
-	IsAvailable bool
+	ID       int
+	CarID    int
+	TicketID string
 }
 
 type Ticket struct {
-	ID       uint64
+	ID       int
 	CarID    string
-	ParkID   uint64
+	ParkID   int
 	TicketID string
 }
